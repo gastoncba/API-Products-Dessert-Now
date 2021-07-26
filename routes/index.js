@@ -3,8 +3,11 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const {getProducts, setOrder} = require('../controllers/ProductController')
+const dotenv = require('dotenv');
+dotenv.config();
+const {USER, PASSWORD} = process.env;
 
-mongoose.connect('mongodb+srv://gastoncba:locolope@cluster0.zvitc.mongodb.net/dessert-now-db?retryWrites=true&w=majority', 
+mongoose.connect(`mongodb+srv://${USER}:${PASSWORD}@cluster0.zvitc.mongodb.net/dessert-now-db?retryWrites=true&w=majority`, 
 {
   useNewUrlParser: true,
   useUnifiedTopology: true,
