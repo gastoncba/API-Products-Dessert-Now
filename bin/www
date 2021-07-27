@@ -7,6 +7,10 @@
 var app = require('../app');
 var debug = require('debug')('myapp:server');
 var http = require('http');
+const mongoose = require("mongoose");
+const dotenv = require('dotenv');
+dotenv.config();
+const {USER, PASSWORD} = process.env;
 
 /**
  * Get port from environment and store in Express.
@@ -20,6 +24,17 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+
+mongoose.connect(`mongodb+srv://${USER}:${PASSWORD}@cluster0.zvitc.mongodb.net/dessert-now-db?retryWrites=true&w=majority`, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", function () {
+  console.log("Conectado a mongo!!!");
+});
 
 /**
  * Listen on provided port, on all network interfaces.
