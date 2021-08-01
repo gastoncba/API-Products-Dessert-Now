@@ -1,9 +1,17 @@
-const product = require('../models/ProductModel')
+const Product = require('../models/ProductModel')
+const Joi = require('joi')
+
+const createProducts = Joi.object({
+    name: Joi.string().max(255).required(),
+    description: Joi.string().required(),
+    price: Joi.number().required(),
+    stock: Joi.number().required()
+})
 
 const getProducts =  async (req, res) => {
 
     try {
-        const products = await product.find();
+        const products = await Product.find();
         res.json(products)
     }
     catch(e) {
@@ -12,11 +20,17 @@ const getProducts =  async (req, res) => {
 }
 
 const setProduct = async (req, res) => {
-
+    
     const {body} = req
+    const {error} = createProducts.validate(body)
+
+    if(error) {
+        const alert = error.details[0].message
+        return res.status(400).json({error: alert})
+    }
 
     try {
-        const newProduct = new product(body);
+        const newProduct = new Product(body);
         await newProduct.save()
         res.send(`se agrego producto`)
     } 
@@ -28,22 +42,21 @@ const setProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
 
+    const {params} = req
+    const {id} = params
     const {body} = req
-    const ID = body._id
 
     try {
-        await product.updateOne({_id:ID}, {
+        await Product.updateOne({_id:id}, {
             $set:{
                 name: body.name, 
                 description: body.description, 
-                img: body.img, 
                 price: body.price, 
                 stock: body.stock, 
-                category: body.category
             }  
         })
 
-        res.send(`se modifico el producto de id: ${ID}`)
+        res.send(`se modifico el producto de id: ${id}`)
     } 
 
     catch(e) {
@@ -53,12 +66,12 @@ const updateProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
 
-    const {body} = req
-    const ID = body._id
+    const {params} = req
+    const {id} = params
 
     try {
-        await product.deleteOne({_id:ID})
-        res.send(`se elimino el producto de id: ${ID}`)
+        await Product.deleteOne({_id:id})
+        res.send(`se elimino el producto de id: ${id}`)
     }
 
     catch(e) {

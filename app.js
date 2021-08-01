@@ -1,11 +1,22 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const cors = require('cors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const indexRouter = require('./routes/index');
+const createRoles = require('./libs/initialSetup')
 
-var indexRouter = require('./routes/index');
-
-var app = express();
+const app = express();
+createRoles() //se crean roles por default 
+app.use(cors({
+    origin: "*",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+    allowedHeaders: "*",
+    exposedHeaders: "*",
+    credentials: true
+}))
 
 app.use(logger('dev'));
 app.use(express.json());
