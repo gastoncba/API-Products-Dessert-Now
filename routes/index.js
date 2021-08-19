@@ -1,14 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const {getProducts, setProduct, updateProduct, deleteProduct} = require('../controllers/ProductController')
+const {getProducts, setProduct, updateProduct, deleteProduct, updateStock} = require('../controllers/ProductController')
 const {register, login} = require('../controllers/UserController')
+const {setOrder} = require('../controllers/OrderController')
 const {verifyToken, isAdmin} = require('../middleware/authJwt')
 
 //productos
 router.get('/api/products', (req, res) => getProducts(req, res))
 router.post('/api/create', [verifyToken, isAdmin] ,(req, res) => setProduct(req, res))
 router.put('/api/update/:id',[verifyToken, isAdmin] ,(req, res) => updateProduct(req, res))
+router.put('/api/update-stock/:id', (req, res) => updateStock(req, res))
 router.delete('/api/delete/:id', [verifyToken, isAdmin] ,(req, res) => deleteProduct(req, res))
+
+//orders
+router.post('/api/create-order', (req, res) => setOrder(req, res))
 
 //users
 router.post('/api/register', (req, res) => register(req, res))

@@ -64,6 +64,28 @@ const updateProduct = async (req, res) => {
     }
 }
 
+const updateStock = async (req, res) => {
+
+    const {params} = req
+    const {id} = params
+    const {body} = req
+
+    try {
+        await Product.updateOne({_id:id}, {
+            $set:{ 
+                //se le asiga el nuevo stock
+                stock: body.stock, 
+            }  
+        })
+
+        res.send(`se modifico el stock del producto de id: ${id}`)
+    } 
+
+    catch(e) {
+        console.log(e)
+    }
+}
+
 const deleteProduct = async (req, res) => {
 
     const {params} = req
@@ -83,5 +105,6 @@ module.exports = {
     getProducts,
     setProduct, 
     updateProduct,
+    updateStock,
     deleteProduct
 }
