@@ -19,6 +19,20 @@ const getProducts =  async (req, res) => {
     }
 }
 
+const getProductID = async (req, res) => {
+
+    const {params} = req
+    const {id} = params; 
+
+    try {
+        const product = await Product.findById(id)
+        res.json(product)
+    }   
+    catch(e) {
+        res.send(e)
+    }
+}
+
 const setProduct = async (req, res) => {
     
     const {body} = req
@@ -106,5 +120,6 @@ module.exports = {
     setProduct, 
     updateProduct,
     updateStock,
-    deleteProduct
+    deleteProduct,
+    getProductID
 }
